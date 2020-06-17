@@ -2,31 +2,36 @@ require('dotenv').config()
 
 const nodemailer = require("nodemailer")
 
-//Step 1
+function sendMail(mailDetails) {
+	let transporter = nodemailer.createTransport({
+		service: 'gmail',
+		auth: {
+			user: process.env.EMAIL,
+			pass: process.env.PASSWORD
+		}
+	}) 
+		
+	transporter.sendMail(mailDetails, function(error, data){
+		if(error){
+			console.log("Error Occurs", error)
+		} else{
+			console.log("Email sent!!!!", data)
+		}
+	})
+}
 
-let transporter = nodemailer.createTransport({
-	service: 'gmail',
-	auth: {
-		user: process.env.EMAIL,
-		pass: process.env.PASSWORD
-	}
-}) 
-
-//Step 2
-let mailOptions = {
+const mailDetails = {
 	from: 'ammadu.gulla@gmail.com',
-	to: 'srilakshmigulla576@gmail.com, srinivas.aleti03@gmail.com',
+	to: 'srilakshmigulla576@gmail.com',
 	cc: 'srilakshmigulla576@gmail.com',
 	bcc: 'srilakshmigulla576@gmail.com',
 	subject: 'Testing and Testing',
-	text: 'IT Works'
+	html: {path: './VaccNodemailer.html'}
+	// attachments: [
+	// 	{   // file on disk as an attachment
+	//         filename: 'VaccNodemailer.html',
+	//         path: './VaccNodemailer.html' // stream this file
+	//     }
+	// ]
 }
-
-//Step 3
-transporter.sendMail(mailOptions, function(error, data){
-	if(error){
-		console.log("Error Occurs", error)
-	} else{
-		console.log("Email sent!!!!", data)
-	}
-})
+sendMail(mailDetails)
